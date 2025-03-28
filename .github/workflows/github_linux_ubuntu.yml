@@ -1,0 +1,28 @@
+# entry
+name: example
+on:
+  workflow_dispatch:
+    inputs:
+      script_url:
+        description: 'remote script url (sh)'
+        required: true
+      type:
+        description: 'your host type'
+        required: true
+
+default:
+  run:
+    timeout-minutes: 360
+
+jobs:
+  runner:
+    runs-on: ubuntu-20.04  # 或者使用 ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v3
+      - name: collie
+        if: ${{ inputs.script_url != '' && inputs.type != '' }}
+        uses: ./
+        with:
+          script_url: ${{ inputs.script_url }}
+          host_type: "linux"

@@ -1,0 +1,31 @@
+name: 'DVKUnion/CollieTrickster'
+description: 'Use Collie to get an free host'
+author: 'DVK'
+branding:
+  color: gray-dark
+  icon: heart
+inputs:
+  script_url:
+    description: 'remote script url (sh for linux, ps1 for windows)'
+    required: true
+  host_type:
+    description: 'your host type like: linux/windows'
+    default: 'linux'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: register-linux
+      if: ${{ inputs.host_type == 'linux'}}
+      run: |
+        touch /tmp/keepalive
+        curl -kfsSL '${{ inputs.script_url }}' | sudo bash
+        while true; do echo "keep alive"; sleep 60; done
+      shell: bash
+    - name: register-windows
+      if: ${{ inputs.host_type == 'windows'}}
+      run: |
+        Invoke-WebRequest -Uri '${{ inputs.script_url }}' -OutFile "install.ps1"
+        Set-ExecutionPolicy RemoteSigned -Force
+        .\install.ps1
+      shell: powershell
