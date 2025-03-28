@@ -10,10 +10,6 @@ on:
         description: 'your host type'
         required: true
 
-default:
-  run:
-    timeout-minutes: 360
-
 jobs:
   runner:
     runs-on: ubuntu-20.04  # 或者使用 ubuntu-latest
